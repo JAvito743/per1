@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nanotecnología · Primer periodo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--page-accent:#3fd0e0;--page-accent-2:#7c8cff}
+:root{
+  /* Mundo visual: laboratorio tecnológico nocturno. Una sola temática oscura por elección.
+     Layout: cabecera con pasos → panel principal por paso (Registro, Aprende, Crea, Entrega). */
+  --ink:#0b1220;          /* fondo */
+  --panel:#121c30;        /* superficies */
+  --panel-2:#18253d;
+  --line:#2a3a5a;
+  --text:#e8eefb;
+  --muted:#9fb0cf;
+  --accent:var(--page-accent,#3fd0e0);
+  --accent-2:var(--page-accent-2,#7c8cff);
+  --ok:#41d39a; --warn:#ffc35a; --bad:#ff6b7d;
+  --f-display:"Chakra Petch","Trebuchet MS",sans-serif;
+  --f-body:"Nunito","Segoe UI",system-ui,sans-serif;
+  --r:14px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;min-height:100%;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:16px;line-height:1.5}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.55}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:16px 18px 60px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:.01em}
+h1{font-size:clamp(1.6rem,3.4vw,2.4rem);line-height:1.1}
+h2{font-size:1.45rem}
+h3{font-size:1.1rem}
+p{margin:0}
+a{color:var(--accent)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+/* Cabecera */
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;padding:14px 0 18px}
+.badge{font-family:var(--f-display);font-weight:700;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink);background:var(--accent);padding:5px 11px;border-radius:999px;white-space:nowrap}
+.top .title{flex:1 1 320px;display:grid;gap:4px}
+.top .sub{color:var(--muted);font-size:.95rem}
+.who{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 14px 6px 6px;font-size:.9rem}
+.who .av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:var(--ink);font-weight:800;font-family:var(--f-display)}
+.who.hidden{display:none}
+
+/* Pasos */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.step{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:var(--panel);border:1px solid var(--line);cursor:pointer;text-align:left;transition:border-color .2s,transform .2s}
+.step:hover:not([disabled]){transform:translateY(-2px);border-color:var(--accent)}
+.step[disabled]{opacity:.45;cursor:not-allowed}
+.step .n{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;border:2px solid var(--line)}
+.step .l{display:grid;line-height:1.15}
+.step .l b{font-family:var(--f-display);font-size:.95rem}
+.step .l small{color:var(--muted);font-size:.78rem}
+.step.on{border-color:var(--accent);background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 16%,var(--panel)),var(--panel))}
+.step.on .n{background:var(--accent);color:var(--ink);border-color:var(--accent)}
+.step.done .n{border-color:var(--ok);color:var(--ok)}
+@media (max-width:720px){.steps{grid-template-columns:repeat(2,1fr)}.step .l small{display:none}}
+
+/* Paneles */
+.view{display:none;animation:rise .45s ease both}
+.view.on{display:block}
+@keyframes rise{from{opacity:.2;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:860px){.grid2,.grid3{grid-template-columns:1fr}}
+.stack{display:grid;gap:14px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.muted{color:var(--muted)}
+.kicker{font-family:var(--f-display);font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+
+/* Formularios */
+.field{display:grid;gap:6px}
+.field label{font-weight:700;font-size:.92rem}
+.field .hint{font-size:.8rem;color:var(--muted)}
+input[type=text],input[type=url],select,textarea{width:100%;background:var(--ink);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);outline:none}
+textarea{resize:vertical;min-height:84px}
+.field.err input,.field.err select,.field.err textarea{border-color:var(--bad)}
+.field .msg{font-size:.8rem;color:var(--bad);min-height:1em}
+
+/* Botones */
+.btn{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--line);background:var(--panel-2);padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:700;transition:transform .12s,border-color .15s,background .15s}
+.btn:hover{border-color:var(--accent);transform:translateY(-1px)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--accent);color:var(--ink);border-color:var(--accent)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent}
+.btn.sm{padding:6px 10px;font-size:.85rem;border-radius:8px}
+.btn.danger:hover{border-color:var(--bad);color:var(--bad)}
+.btn[disabled]{opacity:.5;cursor:not-allowed;transform:none}
+.btn svg{width:18px;height:18px}
+
+/* Chips y checklist */
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:.82rem;border:1px solid var(--line);background:var(--ink)}
+.chip.ok{border-color:var(--ok);color:var(--ok)}
+.chip.no{color:var(--muted)}
+.checklist{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.checklist li{display:flex;gap:10px;align-items:flex-start;font-size:.92rem}
+.checklist li .dot{flex:none;width:20px;height:20px;border-radius:6px;border:2px solid var(--line);display:grid;place-items:center;font-size:.75rem;margin-top:2px;transition:all .2s}
+.checklist li.ok .dot{background:var(--ok);border-color:var(--ok);color:var(--ink)}
+.checklist li.ok .dot::after{content:"✓";font-weight:900}
+
+/* Registro */
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:center}
+@media (max-width:860px){.hero{grid-template-columns:1fr}}
+.hero-art{aspect-ratio:4/3;width:100%;border-radius:var(--r);background:radial-gradient(circle at 50% 45%,color-mix(in srgb,var(--accent) 22%,transparent),transparent 62%),var(--panel);border:1px solid var(--line);overflow:hidden;display:grid;place-items:center}
+.hero-art svg{width:92%;height:92%}
+
+/* Toast */
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(30px);background:var(--panel-2);border:1px solid var(--accent);padding:10px 18px;border-radius:12px;opacity:0;transition:all .3s;z-index:50;max-width:90vw;font-weight:600}
+#toast.on{opacity:1;transform:translateX(-50%)}
+
+/* Modal */
+.modal{position:fixed;inset:0;background:rgba(4,8,16,.78);display:none;align-items:center;justify-content:center;z-index:40;padding:16px}
+.modal.on{display:flex}
+.modal .box{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);max-width:960px;width:100%;max-height:92vh;overflow:auto;padding:20px;display:grid;gap:14px}
+
+/* Evidencia */
+.evidence img{width:100%;border-radius:10px;border:1px solid var(--line);display:block}
+.callout{border-left:4px solid var(--accent);background:var(--ink);padding:12px 14px;border-radius:0 10px 10px 0;font-size:.92rem}
+
+/* Animaciones de ilustraciones */
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes dash{to{stroke-dashoffset:-40}}
+.spin{animation:spin 12s linear infinite;transform-origin:center;transform-box:fill-box}
+.spin-r{animation:spin 9s linear infinite reverse;transform-origin:center;transform-box:fill-box}
+.floaty{animation:floaty 3.4s ease-in-out infinite;transform-box:fill-box}
+.pulse{animation:pulse 2s ease-in-out infinite}
+.flow{stroke-dasharray:6 6;animation:dash 1.2s linear infinite}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0s!important;animation-iteration-count:1!important;transition:none!important}}
+
+/* Periodo 1 */
+.scale{display:grid;grid-template-columns:260px 1fr;gap:22px;align-items:center}
+@media (max-width:700px){.scale{grid-template-columns:1fr}}
+.scale-art{aspect-ratio:1;background:radial-gradient(circle,color-mix(in srgb,var(--accent) 18%,transparent),transparent 70%),var(--ink);border:1px solid var(--line);border-radius:var(--r);display:grid;place-items:center;overflow:hidden}
+.scale-art svg{width:80%;height:80%;animation:zoomIn .5s ease both}
+@keyframes zoomIn{from{transform:scale(2.4);opacity:0}to{transform:none;opacity:1}}
+.scale-name{font-family:var(--f-display);font-size:1.6rem;font-weight:700}
+.scale-num{font-family:var(--f-display);font-size:clamp(1.3rem,3vw,2rem);color:var(--accent);font-variant-numeric:tabular-nums}
+.ruler{height:12px;border-radius:6px;background:var(--ink);border:1px solid var(--line);overflow:hidden}
+.ruler-fill{height:100%;background:linear-gradient(90deg,var(--accent-2),var(--accent));transition:width .5s}
+.range{width:100%;accent-color:var(--accent)}
+.ticks{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);gap:4px}
+.ticks span{flex:1;text-align:center;cursor:pointer}
+.ticks span.on{color:var(--accent);font-weight:800}
+
+.flip{perspective:900px;cursor:pointer;min-height:250px;background:none;border:0;padding:0;text-align:left}
+.flip .inner{position:relative;width:100%;height:100%;min-height:250px;transition:transform .6s;transform-style:preserve-3d}
+.flip.on .inner{transform:rotateY(180deg)}
+.flip .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--r);border:1px solid var(--line);background:var(--panel);padding:16px;display:grid;gap:8px;align-content:start}
+.flip .face.back{transform:rotateY(180deg);background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 14%,var(--panel)),var(--panel));border-color:var(--accent)}
+.flip .face svg{width:110px;height:110px;justify-self:center}
+.flip .face h3{text-align:center}
+.flip .face .tag{justify-self:center;font-size:.75rem;color:var(--muted)}
+
+.q{border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:8px;background:var(--ink)}
+.q .opts{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media (max-width:600px){.q .opts{grid-template-columns:1fr}}
+.q label{display:flex;gap:8px;align-items:center;padding:8px 10px;border-radius:8px;border:1px solid var(--line);cursor:pointer;background:var(--panel)}
+.q label:has(input:checked){border-color:var(--accent)}
+.q.good{border-color:var(--ok)} .q.badq{border-color:var(--bad)}
+.q .fb{font-size:.85rem}
+
+/* Editor */
+.editor{display:grid;grid-template-columns:230px 1fr 260px;gap:14px;align-items:start}
+@media (max-width:1100px){.editor{grid-template-columns:1fr 1fr}.stage-col{grid-column:1/-1;order:-1}}
+@media (max-width:640px){.editor{grid-template-columns:1fr}}
+.tools,.props{display:grid;gap:10px;padding:14px}
+.tools h3,.props h3{font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.lib{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;max-height:230px;overflow:auto;padding-right:2px}
+.lib button{aspect-ratio:1;border-radius:8px;border:1px solid var(--line);background:var(--ink);padding:4px;cursor:pointer;transition:border-color .15s,transform .15s}
+.lib button:hover{border-color:var(--accent);transform:scale(1.06)}
+.lib svg{width:100%;height:100%;pointer-events:none}
+.bgs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.bgs button{aspect-ratio:16/9;border-radius:6px;border:2px solid var(--line);cursor:pointer;background-size:cover;padding:0}
+.bgs button.on{border-color:var(--accent)}
+.stage-col{display:grid;gap:10px;min-width:0}
+.stage-shell{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.45);border:1px solid var(--line);background:#000}
+.stage{position:absolute;left:0;top:0;width:960px;height:540px;transform-origin:0 0;background-size:cover;overflow:hidden;user-select:none}
+.el{position:absolute;touch-action:none;cursor:move}
+.el .inner{width:100%;height:100%}
+.el.text .inner{white-space:pre-wrap;word-break:break-word;line-height:1.2;height:auto;outline:none}
+.el.text{height:auto!important}
+.el svg{width:100%;height:100%;display:block;pointer-events:none}
+.el.shape .inner{border-radius:18px}
+.el.circle .inner{border-radius:50%}
+.el.sel{outline:2px dashed var(--accent);outline-offset:3px}
+.el .h{position:absolute;right:-9px;bottom:-9px;width:18px;height:18px;border-radius:5px;background:var(--accent);border:2px solid var(--ink);cursor:nwse-resize;display:none}
+.el.sel .h{display:block}
+.el .inner[contenteditable=true]{cursor:text;background:rgba(63,208,224,.08)}
+.checks{padding:14px}
+.swatches{display:flex;flex-wrap:wrap;gap:6px}
+.swatches button{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);cursor:pointer}
+.swatches button.on{border-color:#fff;box-shadow:0 0 0 2px var(--accent)}
+#pSizeV{color:var(--accent);font-variant-numeric:tabular-nums}
+.btn.on{border-color:var(--accent);color:var(--accent)}
+
+/* Presentación */
+.present{position:fixed;inset:0;background:#000;z-index:60;display:none;align-items:center;justify-content:center}
+.present.on{display:flex}
+.present .stage{position:relative;left:auto;top:auto;flex:none}
+.present-bar{position:fixed;right:16px;top:16px;display:flex;gap:8px;opacity:.85}
+
+/* Animaciones de entrada / continuas */
+@keyframes a-fade{from{opacity:0}to{opacity:1}}
+@keyframes a-left{from{opacity:0;transform:translateX(-160px)}to{opacity:1;transform:none}}
+@keyframes a-up{from{opacity:0;transform:translateY(90px)}to{opacity:1;transform:none}}
+@keyframes a-zoom{from{opacity:0;transform:scale(.2)}to{opacity:1;transform:none}}
+@keyframes a-spinIn{from{opacity:0;transform:rotate(-200deg) scale(.3)}to{opacity:1;transform:none}}
+@keyframes a-bounce{0%{opacity:0;transform:translateY(-140px)}55%{opacity:1;transform:translateY(16px)}75%{transform:translateY(-8px)}100%{transform:none}}
+@keyframes l-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes l-pulseL{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes l-wobble{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.final .el{cursor:default}
+
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="wrap">
+  <header class="top">
+    <span class="badge">Primer periodo</span>
+    <div class="title">
+      <h1>Nanotecnología: lo invisible que cambia el mundo</h1>
+      <p class="sub">Explora la nanoescala y crea tu propia diapositiva animada.</p>
+    </div>
+    <div class="who hidden" title="Estudiante registrado"><span class="av">?</span><span class="nm"></span></div>
+  </header>
+
+  <nav class="steps" aria-label="Pasos de la actividad">
+    <button class="step" type="button"><span class="n">1</span><span class="l"><b>Registro</b><small>Tus datos</small></span></button>
+    <button class="step" type="button"><span class="n">2</span><span class="l"><b>Aprende</b><small>Escala y usos</small></span></button>
+    <button class="step" type="button"><span class="n">3</span><span class="l"><b>Crea</b><small>Tu diapositiva</small></span></button>
+    <button class="step" type="button"><span class="n">4</span><span class="l"><b>Entrega</b><small>Tu evidencia</small></span></button>
+  </nav>
+
+  <main>
+    <section class="view" id="v0" aria-label="Registro">
+      <div class="hero">
+        <div class="stack">
+          <span class="kicker">Tecnología e Informática · Grado 7</span>
+          <h2>Regístrate para empezar tu actividad</h2>
+          <p class="muted">Vas a descubrir qué tan pequeño es un nanómetro, conocer usos reales de la nanotecnología y diseñar una diapositiva animada con ilustraciones. Al final generas tu evidencia para Google Classroom.</p>
+          <form id="regForm" class="card stack" novalidate>
+            <div class="grid2" style="gap:12px">
+              <div class="field"><label for="f-nombres">Nombres</label><input id="f-nombres" name="nombres" type="text" autocomplete="given-name" placeholder="Ej: María José"><span class="msg"></span></div>
+              <div class="field"><label for="f-apellidos">Apellidos</label><input id="f-apellidos" name="apellidos" type="text" autocomplete="family-name" placeholder="Ej: Pérez Gómez"><span class="msg"></span></div>
+              <div class="field"><label for="f-grado">Grado</label>
+                <select id="f-grado" name="grado"><option value="">Elige…</option><option>7A</option><option>7B</option><option>7C</option><option>7D</option><option>7E</option><option>Otro</option></select><span class="msg"></span></div>
+              <div class="field"><label for="f-grupo">Número de grupo</label>
+                <select id="f-grupo" name="grupo"><option value="">Elige…</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select><span class="msg"></span></div>
+            </div>
+            <div class="row"><button class="btn primary" type="submit">Registrarme y empezar →</button><span class="muted" style="font-size:.85rem">Tus datos aparecerán en la evidencia final.</span></div>
+          </form>
+        </div>
+        <div class="hero-art"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Átomo y nanorobot animados">
+  <defs><pattern id="hh" width="30" height="17.32" patternUnits="userSpaceOnUse"><path d="M0 8.66 L5 0 H15 L20 8.66 L15 17.32 H5 Z M20 8.66 H30" fill="none" stroke="#7c8cff" stroke-opacity=".25" stroke-width="1.4"/></pattern></defs>
+  <rect width="400" height="300" fill="url(#hh)"/>
+  <g transform="translate(70 40)">
+    <g fill="none" stroke="#3fd0e0" stroke-width="4"><ellipse class="spin" cx="110" cy="110" rx="100" ry="38"/><ellipse class="spin-r" cx="110" cy="110" rx="100" ry="38" transform="rotate(60 110 110)"/><ellipse class="spin" cx="110" cy="110" rx="100" ry="38" transform="rotate(120 110 110)"/></g>
+    <circle cx="110" cy="110" r="24" fill="#ff7aa8"/><circle cx="102" cy="102" r="7" fill="#ffd1e2"/>
+    <circle class="pulse" cx="210" cy="110" r="8" fill="#ffe066"/><circle class="pulse" cx="60" cy="24" r="8" fill="#ffe066"/><circle class="pulse" cx="60" cy="196" r="8" fill="#ffe066"/>
+  </g>
+  <g class="floaty" transform="translate(286 170) scale(.5)">
+    <g stroke="#9fb0cf" stroke-width="6" stroke-linecap="round"><path d="M62 128 L34 160"/><path d="M138 128 L166 160"/><path d="M100 40 L100 18"/></g>
+    <circle cx="100" cy="14" r="8" fill="#ffe066" class="pulse"/><rect x="50" y="40" width="100" height="100" rx="40" fill="#cfe7ff" stroke="#3fd0e0" stroke-width="5"/>
+    <rect x="66" y="66" width="68" height="36" rx="18" fill="#0b1220"/><circle cx="84" cy="84" r="9" fill="#3fd0e0" class="pulse"/><circle cx="116" cy="84" r="9" fill="#3fd0e0" class="pulse"/>
+  </g>
+  <g font-family="Chakra Petch, sans-serif" font-weight="700"><text x="22" y="282" fill="#3fd0e0" font-size="22">1 nm = 0,000 000 001 m</text></g>
+</svg>
+</div>
+      </div>
+    </section>
+    <!-- PASO 2: APRENDE -->
+    <section class="view" id="v1" aria-label="Aprende">
+      <div class="stack">
+        <div class="card stack">
+          <span class="kicker">Explorador de escalas</span>
+          <h2>¿Qué tan pequeño es un nanómetro?</h2>
+          <p class="muted">Un nanómetro (nm) es la mil millonésima parte de un metro: 1 nm = 0,000 000 001 m. Mueve el deslizador para ir encogiéndote desde una persona hasta un átomo.</p>
+          <div class="scale">
+            <div class="scale-art" id="scaleArt"></div>
+            <div class="scale-info stack">
+              <div class="scale-name" id="scaleName">Persona</div>
+              <div class="scale-num" id="scaleNum">1 700 000 000 nm</div>
+              <div class="muted" id="scaleM">≈ 1,7 metros</div>
+              <p id="scaleTxt"></p>
+              <div class="ruler" aria-hidden="true"><div class="ruler-fill" id="rulerFill"></div></div>
+            </div>
+          </div>
+          <label for="scaleRange" class="muted" style="font-size:.85rem">Escala: de grande a diminuto</label>
+          <input id="scaleRange" type="range" min="0" max="7" step="1" value="0" class="range">
+          <div class="ticks" id="scaleTicks"></div>
+        </div>
+
+        <div class="stack">
+          <div class="row" style="justify-content:space-between"><h2>¿Dónde se usa la nanotecnología?</h2><span class="muted">Toca cada tarjeta para girarla</span></div>
+          <div class="grid3" id="apps"></div>
+        </div>
+
+        <div class="card stack">
+          <span class="kicker">Comprueba lo que sabes</span>
+          <h2>Mini quiz de 5 preguntas</h2>
+          <div id="quiz" class="stack"></div>
+          <div class="row"><button class="btn primary" id="quizCheck" type="button">Revisar respuestas</button><span id="quizRes" class="chip no">Sin responder</span></div>
+        </div>
+        <div class="row" style="justify-content:flex-end"><button class="btn primary" type="button" onclick="App.markDone(1);App.go(2)">Ir a crear mi diapositiva →</button></div>
+      </div>
+    </section>
+
+    <!-- PASO 3: CREA -->
+    <section class="view" id="v2" aria-label="Crea tu diapositiva">
+      <div class="editor">
+        <aside class="tools card">
+          <h3>Agregar</h3>
+          <div class="tool-grid">
+            <button class="btn sm" type="button" data-add="title"><b>T</b> Título</button>
+            <button class="btn sm" type="button" data-add="text"><b>¶</b> Texto</button>
+            <button class="btn sm" type="button" data-add="box">▭ Cuadro</button>
+            <button class="btn sm" type="button" data-add="circle">◯ Círculo</button>
+          </div>
+          <h3>Ilustraciones</h3>
+          <div class="lib" id="lib"></div>
+          <h3>Fondo</h3>
+          <div class="bgs" id="bgs"></div>
+          <button class="btn sm ghost danger" type="button" id="resetSlide">Empezar de nuevo</button>
+        </aside>
+
+        <div class="stage-col">
+          <div class="row" style="justify-content:space-between">
+            <span class="muted" style="font-size:.88rem">Arrastra para mover · esquina ◢ para cambiar tamaño · doble clic en un texto para editarlo</span>
+            <button class="btn primary sm" type="button" id="presentBtn">▶ Presentar</button>
+          </div>
+          <div class="stage-shell" id="stageShell"><div class="stage" id="stage"></div></div>
+          <div class="card checks">
+            <h3>Tu diapositiva necesita</h3>
+            <ul class="checklist" id="slideChecks"></ul>
+          </div>
+        </div>
+
+        <aside class="props card" id="props">
+          <h3>Propiedades</h3>
+          <p class="muted" id="propsEmpty">Selecciona un elemento de la diapositiva para cambiarlo.</p>
+          <div id="propsBody" class="stack" hidden>
+            <div class="field" id="pTextF"><label for="pText">Texto</label><textarea id="pText" rows="4"></textarea></div>
+            <div class="field" id="pSizeF"><label for="pSize">Tamaño de letra <span id="pSizeV"></span></label><input id="pSize" type="range" min="14" max="72" class="range"></div>
+            <div class="field" id="pColorF"><label>Color</label><div class="swatches" id="pColor"></div></div>
+            <div class="row" id="pFmtF">
+              <button class="btn sm" type="button" id="pBold"><b>N</b> Negrita</button>
+              <button class="btn sm" type="button" data-align="left">⯇</button>
+              <button class="btn sm" type="button" data-align="center">≡</button>
+              <button class="btn sm" type="button" data-align="right">⯈</button>
+            </div>
+            <div class="field"><label for="pAnim">Animación de entrada</label>
+              <select id="pAnim">
+                <option value="">Ninguna</option><option value="fade">Aparecer</option><option value="left">Deslizar desde la izquierda</option>
+                <option value="up">Subir</option><option value="zoom">Acercar (zoom)</option><option value="spinIn">Girar</option><option value="bounce">Rebotar</option>
+              </select></div>
+            <div class="field"><label for="pLoop">Movimiento continuo</label>
+              <select id="pLoop"><option value="">Ninguno</option><option value="float">Flotar</option><option value="pulseL">Latir</option><option value="wobble">Balancear</option></select></div>
+            <div class="row">
+              <button class="btn sm" type="button" id="pFront">Traer al frente</button>
+              <button class="btn sm" type="button" id="pBack">Enviar atrás</button>
+              <button class="btn sm" type="button" id="pDup">Duplicar</button>
+              <button class="btn sm danger" type="button" id="pDel">Eliminar</button>
+            </div>
+            <button class="btn sm ghost" type="button" id="pPreview">Ver animación</button>
+          </div>
+        </aside>
+      </div>
+      <div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn primary" type="button" onclick="App.markDone(2);App.go(3)">Ir a entregar →</button></div>
+    </section>
+
+    <!-- PASO 4: ENTREGA -->
+    <section class="view" id="v3" aria-label="Entrega">
+      <div class="grid2">
+        <div class="card stack">
+          <span class="kicker">Vista previa</span>
+          <div class="stage-shell small" id="finalShell"><div class="stage" id="finalStage"></div></div>
+          <ul class="checklist" id="finalChecks"></ul>
+        </div>
+        <div class="card stack">
+          <span class="kicker">Antes de entregar</span>
+          <h2>Cuéntanos qué aprendiste</h2>
+          <div class="field"><label for="refl">En dos o tres frases: ¿para qué sirve la nanotecnología y qué aplicación te pareció más interesante?</label><textarea id="refl" rows="5" placeholder="La nanotecnología sirve para…"></textarea><span class="msg"></span></div>
+          <div class="callout">Tu evidencia incluirá tu nombre, grado, grupo, la imagen de tu diapositiva, el resultado del quiz y tu reflexión.</div>
+          <button class="btn primary" type="button" id="makeEv">Generar mi evidencia</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="present" id="present" role="dialog" aria-modal="true" aria-label="Presentación">
+      <div class="stage" id="presentStage"></div>
+      <div class="present-bar"><button class="btn sm" type="button" id="replay">↻ Repetir</button><button class="btn sm" type="button" id="exitPresent">Salir ✕</button></div>
+    </div>
+
+  </main>
+</div>
+
+<div class="modal" id="evModal" role="dialog" aria-modal="true" aria-labelledby="evTitle">
+  <div class="box">
+    <div class="row" style="justify-content:space-between"><h2 id="evTitle">Tu evidencia está lista</h2><button class="btn sm ghost" type="button" onclick="closeModal('#evModal')">Cerrar ✕</button></div>
+    <div class="callout"><b>Cómo entregar:</b> guarda la imagen (botón <i>Descargar</i>, o clic derecho › <i>Guardar imagen como</i>; en celular, mantén presionada la imagen) y súbela a la tarea de <b>Google Classroom</b>. Pega también el texto de abajo en el comentario de la tarea.</div>
+    <div class="evidence"><img id="evImg" alt="Imagen de evidencia con tus datos y tu trabajo"></div>
+    <div class="row"><button class="btn primary" id="evDownload" type="button" style="display:none">⬇ Descargar imagen</button><button class="btn" id="evCopy" type="button">Copiar texto para Classroom</button></div>
+    <div class="field"><label for="evText">Texto de entrega</label><textarea id="evText" rows="6" readonly></textarea></div>
+  </div>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+window.PAGE_KEY = "p1nano";
+/* ===== Base común: registro, pasos, fondo, evidencia ===== */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+const Store = {
+  key: k => (window.PAGE_KEY || "tec") + ":" + k,
+  get(k, d) { try { const v = localStorage.getItem(this.key(k)); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(this.key(k), JSON.stringify(v)); } catch (e) { } }
+};
+
+function toast(msg) {
+  const t = $("#toast"); if (!t) return;
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("on"), 2600);
+}
+
+/* ---- Fondo animado: partículas conectadas ---- */
+function startBackground(color) {
+  const c = $("#bg"); if (!c) return;
+  const ctx = c.getContext("2d");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W, H, pts = [];
+  function size() {
+    W = c.width = innerWidth * devicePixelRatio; H = c.height = innerHeight * devicePixelRatio;
+    const n = Math.min(70, Math.round(innerWidth * innerHeight / 22000));
+    pts = Array.from({ length: n }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .35 * devicePixelRatio, vy: (Math.random() - .5) * .35 * devicePixelRatio }));
+  }
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    const d = 140 * devicePixelRatio;
+    for (const p of pts) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1; if (p.y < 0 || p.y > H) p.vy *= -1;
+    }
+    for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
+      const a = pts[i], b = pts[j], dx = a.x - b.x, dy = a.y - b.y, q = Math.hypot(dx, dy);
+      if (q < d) { ctx.strokeStyle = color; ctx.globalAlpha = (1 - q / d) * .35; ctx.lineWidth = devicePixelRatio; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+    }
+    ctx.globalAlpha = .8; ctx.fillStyle = color;
+    for (const p of pts) { ctx.beginPath(); ctx.arc(p.x, p.y, 1.8 * devicePixelRatio, 0, 7); ctx.fill(); }
+    ctx.globalAlpha = 1;
+    if (!reduce) requestAnimationFrame(frame);
+  }
+  addEventListener("resize", size); size(); frame();
+}
+
+/* ---- Pasos ---- */
+const App = {
+  student: null, current: 0, onEnter: {},
+  init() {
+    this.student = Store.get("student", null);
+    $$(".step").forEach((b, i) => b.addEventListener("click", () => this.go(i)));
+    this.refresh();
+    this.go(this.student ? 1 : 0, true);
+  },
+  refresh() {
+    const ok = !!this.student;
+    $$(".step").forEach((b, i) => { b.disabled = i > 0 && !ok; });
+    const w = $(".who");
+    if (ok) {
+      w.classList.remove("hidden");
+      $(".who .av").textContent = (this.student.nombres[0] || "?").toUpperCase();
+      $(".who .nm").textContent = this.student.nombres.split(" ")[0] + " " + this.student.apellidos.split(" ")[0] + " · " + this.student.grado + " · G" + this.student.grupo;
+    } else w.classList.add("hidden");
+  },
+  go(i, silent) {
+    if (i > 0 && !this.student) { toast("Primero regístrate con tus nombres."); i = 0; }
+    this.current = i;
+    $$(".step").forEach((b, k) => { b.classList.toggle("on", k === i); b.setAttribute("aria-current", k === i ? "step" : "false"); });
+    $$(".view").forEach((v, k) => v.classList.toggle("on", k === i));
+    if (this.onEnter[i]) this.onEnter[i]();
+    if (!silent) scrollTo({ top: 0, behavior: "smooth" });
+  },
+  markDone(i) { $$(".step")[i]?.classList.add("done"); }
+};
+
+function setupRegistration() {
+  const f = $("#regForm");
+  const s = Store.get("student", null);
+  if (s) { f.nombres.value = s.nombres; f.apellidos.value = s.apellidos; f.grado.value = s.grado; f.grupo.value = s.grupo; }
+  f.addEventListener("submit", e => {
+    e.preventDefault();
+    let ok = true;
+    const req = (name, test, msg) => {
+      const fld = f[name].closest(".field"); const good = test(f[name].value.trim());
+      fld.classList.toggle("err", !good); fld.querySelector(".msg").textContent = good ? "" : msg; if (!good) ok = false;
+    };
+    req("nombres", v => v.length >= 2, "Escribe tus nombres.");
+    req("apellidos", v => v.length >= 2, "Escribe tus apellidos.");
+    req("grado", v => !!v, "Elige tu grado.");
+    req("grupo", v => !!v, "Elige tu número de grupo.");
+    if (!ok) return;
+    const cap = v => v.trim().replace(/\s+/g, " ").toLowerCase().replace(/(^|\s)\S/g, m => m.toUpperCase());
+    App.student = { nombres: cap(f.nombres.value), apellidos: cap(f.apellidos.value), grado: f.grado.value, grupo: f.grupo.value, fecha: new Date().toISOString() };
+    Store.set("student", App.student);
+    App.refresh(); App.markDone(0);
+    toast("¡Bienvenido, " + App.student.nombres.split(" ")[0] + "!");
+    App.go(1);
+  });
+}
+
+/* ---- Utilidades de dibujo para la evidencia ---- */
+function wrapLines(ctx, text, maxW) {
+  const out = [];
+  String(text || "").split("\n").forEach(par => {
+    const words = par.split(/\s+/).filter(Boolean); let line = "";
+    if (!words.length) { out.push(""); return; }
+    for (const w of words) {
+      const t = line ? line + " " + w : w;
+      if (ctx.measureText(t).width > maxW && line) { out.push(line); line = w; } else line = t;
+    }
+    out.push(line);
+  });
+  return out;
+}
+function fillWrapped(ctx, text, x, y, maxW, lh, maxLines = 99) {
+  let lines = wrapLines(ctx, text, maxW);
+  if (lines.length > maxLines) { lines = lines.slice(0, maxLines); lines[maxLines - 1] += "…"; }
+  lines.forEach((l, i) => ctx.fillText(l, x, y + i * lh));
+  return lines.length * lh;
+}
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+}
+function svgToImage(svgString) {
+  return new Promise((res, rej) => {
+    const img = new Image();
+    img.onload = () => res(img); img.onerror = rej;
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgString);
+  });
+}
+function fmtFecha(d = new Date()) {
+  return d.toLocaleDateString("es-CO", { day: "2-digit", month: "long", year: "numeric" }) + " · " + d.toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" });
+}
+
+/* Tarjeta de evidencia: cabecera con datos del estudiante + zona de trabajo + líneas de resumen */
+async function buildEvidence({ periodo, actividad, accent, workH = 560, drawWork, resumen = [] }) {
+  const W = 1280, pad = 48, headH = 170;
+  const ctx0 = document.createElement("canvas").getContext("2d");
+  ctx0.font = "500 22px Nunito, sans-serif";
+  const resLines = resumen.reduce((n, r) => n + Math.min(4, wrapLines(ctx0, r[0] + ": " + r[1], W - pad * 2).length), 0);
+  const H = headH + workH + 60 + resLines * 32 + 90;
+  const c = document.createElement("canvas"); c.width = W; c.height = H;
+  const ctx = c.getContext("2d");
+  ctx.fillStyle = "#0b1220"; ctx.fillRect(0, 0, W, H);
+  const g = ctx.createLinearGradient(0, 0, W, 0); g.addColorStop(0, accent); g.addColorStop(1, "#7c8cff");
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, 8);
+  const s = App.student;
+  ctx.fillStyle = accent; ctx.font = "700 20px 'Chakra Petch', sans-serif";
+  ctx.fillText(periodo.toUpperCase() + "  ·  TECNOLOGÍA E INFORMÁTICA", pad, 52);
+  ctx.fillStyle = "#e8eefb"; let fz = 40; ctx.font = `700 ${fz}px 'Chakra Petch', sans-serif`;
+  while (ctx.measureText(actividad).width > W - pad * 2 && fz > 22) { fz -= 2; ctx.font = `700 ${fz}px 'Chakra Petch', sans-serif`; }
+  ctx.fillText(actividad, pad, 100);
+  ctx.font = "600 22px Nunito, sans-serif"; ctx.fillStyle = "#9fb0cf";
+  ctx.fillText(`${s.nombres} ${s.apellidos}   ·   Grado ${s.grado}   ·   Grupo ${s.grupo}   ·   ${fmtFecha()}`, pad, 140);
+  // zona de trabajo
+  const wy = headH;
+  roundRect(ctx, pad, wy, W - pad * 2, workH, 16); ctx.fillStyle = "#121c30"; ctx.fill();
+  ctx.save(); roundRect(ctx, pad, wy, W - pad * 2, workH, 16); ctx.clip();
+  await drawWork(ctx, pad, wy, W - pad * 2, workH);
+  ctx.restore();
+  ctx.strokeStyle = "#2a3a5a"; ctx.lineWidth = 2; roundRect(ctx, pad, wy, W - pad * 2, workH, 16); ctx.stroke();
+  // resumen
+  let y = wy + workH + 50;
+  ctx.font = "500 22px Nunito, sans-serif";
+  for (const [k, v] of resumen) {
+    const lines = wrapLines(ctx, k + ": " + v, W - pad * 2).slice(0, 4);
+    lines.forEach((l, i) => {
+      if (i === 0) { ctx.fillStyle = accent; ctx.font = "800 22px Nunito, sans-serif"; ctx.fillText(k + ":", pad, y); const kw = ctx.measureText(k + ": ").width; ctx.fillStyle = "#e8eefb"; ctx.font = "500 22px Nunito, sans-serif"; ctx.fillText(l.slice(k.length + 2), pad + kw, y); }
+      else { ctx.fillStyle = "#e8eefb"; ctx.fillText(l, pad, y); }
+      y += 32;
+    });
+  }
+  ctx.fillStyle = "#5d6f92"; ctx.font = "600 18px Nunito, sans-serif";
+  ctx.fillText("Evidencia generada automáticamente · Sube esta imagen a Google Classroom", pad, H - 34);
+  return c.toDataURL("image/png");
+}
+
+/* Modal de entrega con imagen, descarga y copia de texto */
+let _downloads;
+async function getDownloads() {
+  if (_downloads !== undefined) return _downloads;
+  try { _downloads = window.claude?.use ? await window.claude.use("downloads") : null; } catch (e) { _downloads = null; }
+  return _downloads;
+}
+async function showEvidence(dataURL, textoResumen, fileBase) {
+  const m = $("#evModal");
+  $("#evImg").src = dataURL;
+  $("#evText").value = textoResumen;
+  m.classList.add("on");
+  const dl = await getDownloads();
+  const b = $("#evDownload");
+  b.style.display = dl ? "" : "none";
+  b.onclick = async () => {
+    try {
+      const blob = await (await fetch(dataURL)).blob();
+      await dl.save({ filename: fileBase + ".png", data: blob });
+      toast("Imagen descargada.");
+    } catch (e) { toast("No se descargó. Usa clic derecho › Guardar imagen."); }
+  };
+  $("#evCopy").onclick = async () => {
+    try { await navigator.clipboard.writeText(textoResumen); toast("Texto copiado. Pégalo en Classroom."); }
+    catch (e) { $("#evText").select(); toast("Selecciona el texto y cópialo con Ctrl+C."); }
+  };
+}
+function closeModal(id) { $(id).classList.remove("on"); }
+function slug(s) { return String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-zA-Z0-9]+/g, "_").replace(/^_|_$/g, ""); }
+
+</script>
+<script>
+/* Biblioteca de ilustraciones tecnológicas (SVG 200x200, colores en atributos para poder exportarlas) */
+const ILL = {
+  atomo: { n: "Átomo", s: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g fill="none" stroke="#3fd0e0" stroke-width="5"><ellipse class="spin" cx="100" cy="100" rx="85" ry="32"/><ellipse class="spin-r" cx="100" cy="100" rx="85" ry="32" transform="rotate(60 100 100)"/><ellipse class="spin" cx="100" cy="100" rx="85" ry="32" transform="rotate(120 100 100)"/></g><circle cx="100" cy="100" r="20" fill="#ff7aa8"/><circle cx="93" cy="94" r="6" fill="#ffd1e2"/><circle class="pulse" cx="185" cy="100" r="8" fill="#ffe066"/><circle class="pulse" cx="57" cy="27" r="8" fill="#ffe066"/><circle class="pulse" cx="57" cy="173" r="8" fill="#ffe066"/></svg>` },
+  nanorobot: { n: "Nanorobot", s: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g class="floaty"><g stroke="#9fb0cf" stroke-width="6" stroke-linecap="round"><path d="M62 128 L34 160"/><path d="M80 138 L70 178"/><path d="M120 138 L130 178"/><path d="M138 128 L166 160"/><path d="M100 40 L100 18"/></g><circle cx="100" cy="14" r="8" fill="#ffe066" class="pulse"/><rect x="50" y="40" width="100" height="100" rx="40" fill="#cfe7ff"/><rect x="50" y="40" width="100" height="100" rx="40" fill="none" stroke="#3fd0e0" stroke-width="5"/><rect x="66" y="66" width="68" height="36" rx="18" fill="#0b1220"/><circle cx="84" cy="84" r="9" fill="#3fd0e0" class="pulse"/><circle cx="116" cy="84" r="9" fill="#3fd0e0" class="pulse"/><path d="M80 118 Q100 130 120 118" stroke="#7c8cff" stroke-width="5" fill="none" stroke-linecap="round"/></g></svg>` },
+  nanotubo: { n: "Nanotubo de carbono", s: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><pattern id="hx" width="24" height="14" patternUnits="userSpaceOnUse"><path d="M0 7 L6 0 L18 0 L24 7 L18 14 L6 14 Z" fill="none" stroke="#3fd0e0" stroke-width="2"/></pattern></defs><g transform="rotate(-25 100 100)"><rect x="20" y="70" width="160" height="60" fill="#14304a"/><rect x="20" y="70" width="160" height="60" fill="url(#hx)"/><ellipse cx="180" cy="100" rx="14" ry="30" fill="#1d4466" stroke="#3fd0e0" stroke-width="3"/><ellipse cx="20" cy="100" rx="14" ry="30" fill="none" stroke="#3fd0e0" stroke-width="3"/><path d="M20 70 L180 70 M20 130 L180 130" stroke="#7fe8f2" stroke-width="3"/></g><circle class="pulse" cx="40" cy="40" r="5" fill="#ffe066"/><circle class="pulse" cx="165" cy="165" r="5" fill="#ffe066"/></svg>` },
+  grafeno: { n: "Grafeno", s: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g stroke="#7c8cff" stroke-width="3" fill="none"><path d="M40 60 L60 48 L80 60 L80 84 L60 96 L40 84 Z M80 60 L100 48 L120 60 L120 84 L100 96 L80 84 M120 60 L140 48 L160 60 L160 84 L140 96 L120 84 M60 96 L60 120 L80 132 L100 120 L100 96 M100 120 L120 132 L140 120 L140 96 M60 120 L40 132 M140 120 L160 132 M80 132 L80 156 L100 168 L120 156 L120 132"/></g><g fill="#3fd0e0"><circle cx="40" cy="60" r="6"/><circle cx="60" cy="48" r="6"/><circle cx="80" cy="60" r="6"/><circle cx="100" cy="48" r="6"/><circle cx="120" cy="60" r="6"/><circle cx="140" cy="48" r="6"/><circle cx="160" cy="60" r="6"/><circle cx="40" cy="84" r="6"/><circle cx="80" cy="84" r="6"/><circle cx="120" cy="84" r="6"/><circle cx="160" cy="84" r="6"/><circle cx="60" cy="96" r="6"/><circle cx="100" cy="96" r="6"/><circle cx="140" cy="96" r="6"/><circle cx="60" cy="120" r="6"/><circle cx="100" cy="120" r="6"/><circle cx="140" cy="120" r="6"/><circle cx="80" cy="132" r="6"/><circle cx="120" cy="132" r="6"/><circle cx="80" cy="156" r="6"/><circle cx="120" cy="156" r="6"/><circle cx="100" cy="168" r="6"/></g><circle class="pulse" cx="100" cy="96" r="12" fill="none" stroke="#ffe066" stroke-width="3"/></svg>` },
+  chip: { n: "Chip / procesador", s: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g stroke="#9fb0cf" stroke-width="5" stroke-linecap="round"><path d="M70 30v20M90 30v20M110 30v20M130 30v20M70 150v20M90 150v20M110 150v20M130 150v20M30 70h20M30 90h20M30 110h20M30 130h20M150 70h20M150 90h20M150 110h20M150 130h20"/></g><rect x="50" y="50" width="100" height="100" rx="12" fill="#1b2a44" stroke="#3fd0e0" stroke-width="4"/><rect x="72" y="72" width="56" height="56" rx="6" fill="#0b1220" stroke="#7c8cff" stroke-width="3"/><path class="flow" d="M72 100 H60 M128 100 H140 M100 72 V60 M100 128 V140" stroke="#ffe066" stroke-width="3"/><text x="100" y="107" font-family="Arial" font-size="18" font-weight="700" fill="#3fd0e0" text-anchor="middle">3 nm</text></svg>` },
+  adn: { n: "ADN", s: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g stroke-width="4" stroke-linecap="round"><path d="M70 30 L130 50 M70 70 L130 50 M70 70 L130 90 M70 110 L130 90 M70 110 L130 130 M70 150 L130 130 M70 150 L130 170" stroke="#2a3a5a" stroke-width="0"/><path d="M80 40 H120 M74 64 H126 M80 88 H120 M74 112 H126 M80 136 H120 M74 160 H126" stroke="#ffe066" class="pulse"/></g><path d="M70 20 C140 50 140 70 70 100 C0 130 140 150 130 180" fill="none" stroke="#ff7aa8" stroke-width="7"/><path d="M130 20 C60 50 60 70 130 100 C200 130 60 150 70 180" fill="none" stroke="#3fd0e0" stroke-width="7"/></svg>` },
+  microscopio: { n: "Microscopio", s: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect x="40" y="166" width="120" height="16" rx="6" fill="#7c8cff"/><path d="M120 166 C150 150 150 100 118 86" fill="none" stroke="#9fb0cf" stroke-width="12" stroke-linecap="round"/><rect x="70" y="128" width="70" height="10" rx="4" fill="#9fb0cf"/><g transform="rotate(-30 100 70)"><rect x="86" y="20" width="28" height="80" rx="8" fill="#3fd0e0"/><rect x="80" y="12" width="40" height="14" rx="5" fill="#cfe7ff"/><rect x="92" y="100" width="16" height="18" fill="#cfe7ff"/></g><circle class="pulse" cx="116" cy="124" r="6" fill="#ffe066"/></svg>` },
+  capsula: { n: "Medicina con nanopartículas", s: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g transform="rotate(-35 100 100)"><rect x="30" y="70" width="140" height="60" rx="30" fill="#cfe7ff"/><path d="M100 70 H140 A30 30 0 0 1 140 130 H100 Z" fill="#ff7aa8"/><rect x="30" y="70" width="140" height="60" rx="30" fill="none" stroke="#0b1220" stroke-width="3" opacity=".3"/></g><g fill="#3fd0e0"><circle class="pulse" cx="70" cy="110" r="5"/><circle class="pulse" cx="86" cy="96" r="4"/><circle class="pulse" cx="60" cy="126" r="4"/><circle class="pulse" cx="150" cy="40" r="6"/><circle class="pulse" cx="168" cy="62" r="4"/><circle class="pulse" cx="34" cy="168" r="5"/></g></svg>` },
+  virus: { n: "Virus", s: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g class="spin" stroke="#41d39a" stroke-width="6" stroke-linecap="round"><path d="M100 30V12M100 170v18M30 100H12M170 100h18M50 50L37 37M150 150l13 13M150 50l13-13M50 150l-13 13"/></g><circle cx="100" cy="100" r="58" fill="#1d4d3d" stroke="#41d39a" stroke-width="5"/><circle cx="82" cy="86" r="10" fill="#41d39a" opacity=".6"/><circle cx="118" cy="116" r="14" fill="#41d39a" opacity=".4"/><circle cx="116" cy="78" r="6" fill="#41d39a" opacity=".7"/></svg>` },
+  globulo: { n: "Glóbulo rojo", s: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g class="floaty"><ellipse cx="100" cy="100" rx="80" ry="62" fill="#e04563"/><ellipse cx="100" cy="100" rx="42" ry="30" fill="#b8243f"/><ellipse cx="80" cy="76" rx="24" ry="10" fill="#ff8fa6" opacity=".6"/></g></svg>` },
+  agua: { n: "Filtro de agua", s: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path d="M100 18 C130 64 160 96 160 128 A60 60 0 0 1 40 128 C40 96 70 64 100 18 Z" fill="#1f5f8f" stroke="#3fd0e0" stroke-width="5"/><g stroke="#7fe8f2" stroke-width="3"><path d="M56 120 H144 M52 136 H148 M58 152 H142"/></g><g fill="#ffe066"><circle class="pulse" cx="76" cy="100" r="5"/><circle class="pulse" cx="118" cy="92" r="4"/><circle class="pulse" cx="96" cy="78" r="3"/></g><path d="M80 170 Q100 180 120 170" stroke="#cfe7ff" stroke-width="5" fill="none" stroke-linecap="round"/></svg>` },
+  camiseta: { n: "Tela que repele manchas", s: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path d="M70 30 L40 44 L18 80 L46 94 L56 80 L56 176 H144 V80 L154 94 L182 80 L160 44 L130 30 Q100 52 70 30 Z" fill="#7c8cff" stroke="#cfe7ff" stroke-width="4" stroke-linejoin="round"/><g class="floaty"><path d="M96 96 C104 108 110 116 110 124 A14 14 0 0 1 82 124 C82 116 88 108 96 96 Z" fill="#7fe8f2"/></g><path d="M72 150 Q100 140 128 150" stroke="#cfe7ff" stroke-width="3" fill="none" stroke-dasharray="4 6"/></svg>` },
+  sol: { n: "Protector solar", s: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g class="spin" stroke="#ffc35a" stroke-width="6" stroke-linecap="round"><path d="M60 14V0M60 120v-14M14 60H0M120 60h-14M28 28 18 18M92 92l10 10M92 28l10-10M28 92 18 102"/></g><circle cx="60" cy="60" r="28" fill="#ffc35a"/><rect x="104" y="80" width="64" height="104" rx="16" fill="#cfe7ff"/><rect x="116" y="60" width="40" height="26" rx="6" fill="#ff7aa8"/><text x="136" y="140" font-family="Arial" font-size="20" font-weight="800" fill="#0b1220" text-anchor="middle">FPS</text><text x="136" y="164" font-family="Arial" font-size="18" font-weight="700" fill="#0b1220" text-anchor="middle">50</text></svg>` },
+  persona: { n: "Persona", s: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="100" cy="40" r="22" fill="#ffd1a8"/><path d="M70 72 H130 L138 130 H118 L114 190 H86 L82 130 H62 Z" fill="#3fd0e0"/></svg>` },
+  hormiga: { n: "Hormiga", s: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g stroke="#3b2a20" stroke-width="5" stroke-linecap="round" fill="none"><path d="M80 110 L60 150M100 112 L100 156M120 110 L140 150M80 100 L56 72M120 100 L146 72M50 80 L36 56M44 82 L26 70"/></g><ellipse cx="54" cy="96" rx="22" ry="18" fill="#7a4a2e"/><ellipse cx="100" cy="102" rx="20" ry="14" fill="#8a5636"/><ellipse cx="150" cy="104" rx="32" ry="24" fill="#7a4a2e"/></svg>` },
+  cabello: { n: "Cabello", s: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path d="M20 160 C70 60 130 160 180 40" stroke="#5a3b22" stroke-width="22" fill="none" stroke-linecap="round"/><path d="M20 160 C70 60 130 160 180 40" stroke="#8a5d3b" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="2 14"/></svg>` },
+  bacteria: { n: "Bacteria", s: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g stroke="#41d39a" stroke-width="4" fill="none"><path class="flow" d="M150 100 C170 80 180 120 196 100"/><path class="flow" d="M150 110 C168 130 180 116 196 136"/></g><rect x="30" y="70" width="130" height="60" rx="30" fill="#2e7d5b" stroke="#41d39a" stroke-width="4"/><circle cx="70" cy="96" r="8" fill="#41d39a" opacity=".6"/><circle cx="110" cy="106" r="10" fill="#41d39a" opacity=".45"/></svg>` }
+};
+const illHTML = k => ILL[k] ? ILL[k].s.replace(/id="hx"/g, 'id="hx_' + Math.random().toString(36).slice(2, 7) + '"').replace(/url\(#hx\)/g, (m) => m) : "";
+/* asegura ids únicos de patrones cuando hay varias copias en el DOM */
+function illUnique(k) {
+  const id = "p" + Math.random().toString(36).slice(2, 8);
+  return ILL[k].s.replace(/id="hx"/g, `id="${id}"`).replace(/url\(#hx\)/g, `url(#${id})`);
+}
+
+/* ===== Periodo 1 · Nanotecnología ===== */
+const ACCENT = "#3fd0e0";
+startBackground(ACCENT);
+
+/* ---------- Explorador de escalas ---------- */
+const SCALES = [
+  { k: "persona", n: "Persona", nm: 1.7e9, m: "≈ 1,7 metros", t: "Tú mides cerca de mil setecientos millones de nanómetros." },
+  { k: "hormiga", n: "Hormiga", nm: 5e6, m: "≈ 5 milímetros", t: "Una hormiga cabe en la uña, pero aún es gigante para la nanotecnología." },
+  { k: "cabello", n: "Grosor de un cabello", nm: 8e4, m: "≈ 80 micrómetros", t: "Un cabello mide unos 80 000 nm de grosor. ¡Todavía es enorme!" },
+  { k: "globulo", n: "Glóbulo rojo", nm: 7e3, m: "≈ 7 micrómetros", t: "Las células de tu sangre solo se ven con microscopio." },
+  { k: "bacteria", n: "Bacteria", nm: 2e3, m: "≈ 2 micrómetros", t: "Muchas bacterias miden entre 1 000 y 5 000 nm." },
+  { k: "virus", n: "Virus", nm: 100, m: "≈ 0,0000001 metros", t: "Aquí empieza la nanoescala: entre 1 y 100 nm trabaja la nanotecnología." },
+  { k: "adn", n: "Ancho del ADN", nm: 2.5, m: "≈ 0,0000000025 metros", t: "La molécula de ADN mide solo 2,5 nm de ancho." },
+  { k: "atomo", n: "Átomo", nm: 0.1, m: "≈ 0,0000000001 metros", t: "Un átomo mide alrededor de 0,1 nm. La nanotecnología acomoda átomos y moléculas." }
+];
+const fmtNm = v => (v >= 1 ? Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") : String(v).replace(".", ",")) + " nm";
+function setScale(i) {
+  const s = SCALES[i];
+  $("#scaleArt").innerHTML = illUnique(s.k);
+  $("#scaleName").textContent = s.n; $("#scaleNum").textContent = fmtNm(s.nm); $("#scaleM").textContent = s.m; $("#scaleTxt").textContent = s.t;
+  const p = (Math.log10(s.nm) + 1) / (Math.log10(1.7e9) + 1);
+  $("#rulerFill").style.width = Math.max(3, p * 100) + "%";
+  $$("#scaleTicks span").forEach((t, k) => t.classList.toggle("on", k === i));
+}
+$("#scaleTicks").innerHTML = SCALES.map((s, i) => `<span data-i="${i}">${s.n.split(" ")[0]}</span>`).join("");
+$$("#scaleTicks span").forEach(t => t.addEventListener("click", () => { $("#scaleRange").value = t.dataset.i; setScale(+t.dataset.i); }));
+$("#scaleRange").addEventListener("input", e => setScale(+e.target.value));
+setScale(0);
+
+/* ---------- Aplicaciones ---------- */
+const APPS = [
+  { k: "capsula", t: "Medicina", f: "Nanopartículas que llevan el medicamento directo a las células enfermas, sin dañar las sanas." },
+  { k: "chip", t: "Electrónica", f: "Los procesadores de celulares tienen transistores de pocos nanómetros. Así caben miles de millones en un chip." },
+  { k: "grafeno", t: "Materiales", f: "El grafeno es una capa de carbono de un átomo de grosor: muy liviano, flexible y más resistente que el acero." },
+  { k: "agua", t: "Medio ambiente", f: "Filtros con nanomateriales atrapan bacterias y contaminantes para obtener agua potable." },
+  { k: "camiseta", t: "Ropa inteligente", f: "Telas con nanorecubrimientos que repelen el agua y las manchas o eliminan olores." },
+  { k: "sol", t: "Cosméticos", f: "Protectores solares con nanopartículas de óxido de zinc que bloquean los rayos UV sin dejar la piel blanca." }
+];
+$("#apps").innerHTML = APPS.map((a, i) => `
+  <button class="flip" type="button" aria-label="${a.t}: girar tarjeta">
+    <div class="inner">
+      <div class="face">${illUnique(a.k)}<h3>${a.t}</h3><span class="tag">Toca para descubrir</span></div>
+      <div class="face back"><h3>${a.t}</h3><p>${a.f}</p></div>
+    </div>
+  </button>`).join("");
+$$(".flip").forEach(f => f.addEventListener("click", () => f.classList.toggle("on")));
+
+/* ---------- Quiz ---------- */
+const QUIZ = [
+  { q: "¿Cuánto mide un nanómetro?", o: ["La milésima parte de un metro", "La mil millonésima parte de un metro", "Un centímetro", "Diez metros"], a: 1 },
+  { q: "¿Con qué trabaja la nanotecnología?", o: ["Con planetas y estrellas", "Con átomos y moléculas", "Con edificios", "Solo con computadores"], a: 1 },
+  { q: "¿Qué material tiene el grosor de un solo átomo de carbono?", o: ["El vidrio", "El aluminio", "El grafeno", "El plástico"], a: 2 },
+  { q: "¿Cuál es un uso de la nanotecnología en la medicina?", o: ["Llevar medicamentos directo a las células", "Fabricar camillas", "Pintar hospitales", "Hacer jeringas más grandes"], a: 0 },
+  { q: "¿Qué es más pequeño?", o: ["Un glóbulo rojo", "Un cabello", "Un virus", "Una hormiga"], a: 2 }
+];
+let quizScore = Store.get("quiz", null);
+$("#quiz").innerHTML = QUIZ.map((q, i) => `
+  <fieldset class="q" id="q${i}" style="margin:0"><legend style="font-weight:800;padding:0 4px">${i + 1}. ${q.q}</legend>
+    <div class="opts">${q.o.map((o, j) => `<label><input type="radio" name="q${i}" value="${j}"> ${o}</label>`).join("")}</div>
+    <div class="fb" aria-live="polite"></div></fieldset>`).join("");
+$("#quizCheck").addEventListener("click", () => {
+  let n = 0, answered = 0;
+  QUIZ.forEach((q, i) => {
+    const sel = $(`input[name=q${i}]:checked`); const box = $("#q" + i);
+    box.classList.remove("good", "badq");
+    if (!sel) { box.querySelector(".fb").textContent = "Elige una respuesta."; return; }
+    answered++;
+    const good = +sel.value === q.a; if (good) n++;
+    box.classList.add(good ? "good" : "badq");
+    box.querySelector(".fb").innerHTML = good ? "<span style='color:var(--ok)'>¡Correcto!</span>" : `<span style='color:var(--bad)'>La respuesta es: ${q.o[q.a]}</span>`;
+  });
+  if (answered < QUIZ.length) { toast("Responde todas las preguntas."); return; }
+  quizScore = n; Store.set("quiz", n);
+  const r = $("#quizRes"); r.textContent = `${n} de ${QUIZ.length} correctas`; r.className = "chip " + (n >= 3 ? "ok" : "no");
+  toast(n === 5 ? "¡Perfecto! 5 de 5" : `Obtuviste ${n} de 5`);
+});
+if (quizScore != null) { $("#quizRes").textContent = `${quizScore} de ${QUIZ.length} correctas`; $("#quizRes").className = "chip ok"; }
+
+/* ---------- Fondos ---------- */
+const BGS = {
+  lab: { n: "Laboratorio", dark: true, s: `<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b1220"/><stop offset="1" stop-color="#16295a"/></linearGradient><radialGradient id="r" cx=".8" cy=".3" r=".6"><stop offset="0" stop-color="#3fd0e0" stop-opacity=".35"/><stop offset="1" stop-color="#3fd0e0" stop-opacity="0"/></radialGradient><pattern id="p" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#3fd0e0" stroke-opacity=".08"/></pattern></defs><rect width="960" height="540" fill="url(#g)"/><rect width="960" height="540" fill="url(#p)"/><rect width="960" height="540" fill="url(#r)"/><rect y="520" width="960" height="20" fill="#3fd0e0" opacity=".5"/></svg>` },
+  nano: { n: "Nano azul", dark: true, s: `<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540"><defs><radialGradient id="r" cx=".3" cy=".6" r=".9"><stop offset="0" stop-color="#0d4a5e"/><stop offset="1" stop-color="#041018"/></radialGradient><pattern id="d" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="14" cy="14" r="1.8" fill="#7fe8f2" fill-opacity=".25"/></pattern></defs><rect width="960" height="540" fill="url(#r)"/><rect width="960" height="540" fill="url(#d)"/><circle cx="860" cy="80" r="160" fill="#3fd0e0" opacity=".08"/><circle cx="90" cy="500" r="120" fill="#7c8cff" opacity=".12"/></svg>` },
+  grafeno: { n: "Grafeno", dark: true, s: `<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540"><defs><pattern id="h" width="60" height="34.64" patternUnits="userSpaceOnUse"><path d="M0 17.32 L10 0 H30 L40 17.32 L30 34.64 H10 Z M40 17.32 H60" fill="none" stroke="#7c8cff" stroke-opacity=".28" stroke-width="2"/></pattern><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#101830"/><stop offset="1" stop-color="#1c1240"/></linearGradient></defs><rect width="960" height="540" fill="url(#g)"/><rect width="960" height="540" fill="url(#h)"/></svg>` },
+  circuito: { n: "Circuito", dark: true, s: `<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540"><rect width="960" height="540" fill="#071a16"/><g fill="none" stroke="#41d39a" stroke-opacity=".25" stroke-width="3"><path d="M0 90 H220 L260 130 H520"/><path d="M960 420 H700 L660 380 H420"/><path d="M120 540 V430 L160 390 H300"/><path d="M820 0 V110 L780 150 H640"/><path d="M0 300 H120 L150 270 H260"/></g><g fill="#41d39a" fill-opacity=".45"><circle cx="520" cy="130" r="7"/><circle cx="420" cy="380" r="7"/><circle cx="300" cy="390" r="7"/><circle cx="640" cy="150" r="7"/><circle cx="260" cy="270" r="7"/></g></svg>` },
+  morado: { n: "Galaxia", dark: true, s: `<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a1458"/><stop offset=".6" stop-color="#140c30"/><stop offset="1" stop-color="#0b1220"/></linearGradient></defs><rect width="960" height="540" fill="url(#g)"/><g fill="#fff"><circle cx="90" cy="60" r="1.6"/><circle cx="300" cy="140" r="1.2"/><circle cx="520" cy="40" r="1.8"/><circle cx="700" cy="200" r="1.2"/><circle cx="880" cy="120" r="1.6"/><circle cx="160" cy="400" r="1.2"/><circle cx="420" cy="480" r="1.6"/><circle cx="820" cy="460" r="1.4"/></g><circle cx="760" cy="420" r="220" fill="#ff7aa8" opacity=".08"/></svg>` },
+  claro: { n: "Claro", dark: false, s: `<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540"><rect width="960" height="540" fill="#f3f7ff"/><circle cx="900" cy="40" r="240" fill="#cfe7ff"/><circle cx="40" cy="540" r="180" fill="#e3e0ff"/><rect y="0" width="960" height="10" fill="#3fd0e0"/></svg>` }
+};
+const bgURL = k => `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(BGS[k].s)}")`;
+const COLORS = ["#ffffff", "#e8eefb", "#3fd0e0", "#7c8cff", "#ffe066", "#ff7aa8", "#41d39a", "#ffc35a", "#1b2a44", "#0b1220"];
+
+/* ---------- Estado de la diapositiva ---------- */
+let uid = 1; const nid = () => "e" + Date.now().toString(36) + (uid++);
+function starter() {
+  return {
+    bg: "lab", els: [
+      { id: nid(), type: "text", role: "title", x: 50, y: 36, w: 860, text: "Escribe aquí tu título", def: "Escribe aquí tu título", size: 46, color: "#ffffff", bold: true, align: "left", anim: "left", loop: "" },
+      { id: nid(), type: "text", x: 50, y: 170, w: 520, text: "¿Qué es la nanotecnología? Escribe una definición con tus propias palabras.", def: "¿Qué es la nanotecnología? Escribe una definición con tus propias palabras.", size: 24, color: "#e8eefb", bold: false, align: "left", anim: "fade", loop: "" },
+      { id: nid(), type: "text", x: 50, y: 340, w: 520, text: "Un ejemplo de uso: cuenta en qué ayuda a las personas.", def: "Un ejemplo de uso: cuenta en qué ayuda a las personas.", size: 24, color: "#ffe066", bold: false, align: "left", anim: "up", loop: "" },
+      { id: nid(), type: "img", img: "nanorobot", x: 640, y: 160, w: 260, h: 260, anim: "zoom", loop: "float" }
+    ]
+  };
+}
+let slide = Store.get("slide", null) || starter();
+let selId = null;
+const save = () => { Store.set("slide", slide); updateChecks(); };
+const byId = id => slide.els.find(e => e.id === id);
+
+/* ---------- Render ---------- */
+function elNode(e, mode) {
+  const d = document.createElement("div");
+  d.className = "el " + (e.type === "img" ? "img" : e.type === "text" ? "text" : "shape " + (e.type === "circle" ? "circle" : ""));
+  d.dataset.id = e.id;
+  Object.assign(d.style, { left: e.x + "px", top: e.y + "px", width: e.w + "px" });
+  if (e.type !== "text") d.style.height = e.h + "px";
+  const inner = document.createElement("div"); inner.className = "inner";
+  if (e.type === "text") {
+    Object.assign(inner.style, { fontSize: e.size + "px", color: e.color, fontWeight: e.bold ? 700 : 500, textAlign: e.align, fontFamily: e.role === "title" ? "var(--f-display)" : "var(--f-body)" });
+    inner.textContent = e.text;
+  } else if (e.type === "img") inner.innerHTML = illUnique(e.img);
+  else { inner.style.background = e.color; inner.style.opacity = e.opacity ?? .9; }
+  if (e.loop) inner.style.animation = `l-${e.loop} ${e.loop === "float" ? 3.2 : 2.4}s ease-in-out infinite`;
+  d.appendChild(inner);
+  if (mode === "edit") { const h = document.createElement("span"); h.className = "h"; h.title = "Cambiar tamaño"; d.appendChild(h); if (e.id === selId) d.classList.add("sel"); }
+  return d;
+}
+function renderInto(stage, mode, animate) {
+  stage.innerHTML = ""; stage.style.backgroundImage = bgURL(slide.bg);
+  slide.els.forEach((e, i) => {
+    const n = elNode(e, mode);
+    if (animate && e.anim) { n.style.animation = `a-${e.anim} .8s cubic-bezier(.2,.8,.2,1) both`; n.style.animationDelay = (i * .45) + "s"; }
+    stage.appendChild(n);
+  });
+}
+function fit(shell, stage) { const s = shell.clientWidth / 960; stage.style.transform = `scale(${s})`; return s; }
+const stage = $("#stage"), shell = $("#stageShell");
+let scale = 1;
+new ResizeObserver(() => { scale = fit(shell, stage); fit($("#finalShell"), $("#finalStage")); }).observe(document.body);
+function render() { renderInto(stage, "edit", false); scale = fit(shell, stage); renderProps(); }
+
+/* ---------- Interacción: mover, redimensionar, editar ---------- */
+let drag = null;
+stage.addEventListener("pointerdown", ev => {
+  const node = ev.target.closest(".el");
+  if (!node) { if (selId) { selId = null; render(); } return; }
+  const e = byId(node.dataset.id);
+  if (node.querySelector("[contenteditable=true]")) return;
+  if (selId !== e.id) { selId = e.id; $$(".el", stage).forEach(n => n.classList.toggle("sel", n === node)); renderProps(); }
+  const resize = ev.target.classList.contains("h");
+  drag = { node, e, resize, sx: ev.clientX, sy: ev.clientY, x: e.x, y: e.y, w: e.w, h: e.h || node.offsetHeight };
+  node.setPointerCapture(ev.pointerId); ev.preventDefault();
+});
+stage.addEventListener("pointermove", ev => {
+  if (!drag) return;
+  const dx = (ev.clientX - drag.sx) / scale, dy = (ev.clientY - drag.sy) / scale, e = drag.e;
+  if (drag.resize) {
+    e.w = Math.max(40, Math.round(drag.w + dx));
+    if (e.type === "img" || e.type === "circle") e.h = Math.round(e.w * drag.h / drag.w);
+    else if (e.type === "box") e.h = Math.max(30, Math.round(drag.h + dy));
+    drag.node.style.width = e.w + "px"; if (e.type !== "text") drag.node.style.height = e.h + "px";
+  } else {
+    e.x = Math.round(Math.min(940, Math.max(-e.w + 20, drag.x + dx)));
+    e.y = Math.round(Math.min(520, Math.max(-20, drag.y + dy)));
+    drag.node.style.left = e.x + "px"; drag.node.style.top = e.y + "px";
+  }
+});
+const endDrag = () => { if (drag) { drag = null; save(); } };
+stage.addEventListener("pointerup", endDrag); stage.addEventListener("pointercancel", endDrag);
+stage.addEventListener("dblclick", ev => {
+  const node = ev.target.closest(".el.text"); if (!node) return;
+  const e = byId(node.dataset.id), inner = node.querySelector(".inner");
+  inner.contentEditable = "true"; inner.focus();
+  const r = document.createRange(); r.selectNodeContents(inner); const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+  inner.oninput = () => { e.text = inner.innerText; $("#pText").value = e.text; updateChecks(); };
+  inner.onblur = () => { inner.contentEditable = "false"; e.text = inner.innerText.trim() || e.text; save(); };
+});
+document.addEventListener("keydown", ev => {
+  if (App.current !== 2 || !selId) return;
+  if (ev.target.closest("input,textarea,select,[contenteditable=true]")) return;
+  const e = byId(selId); if (!e) return;
+  if (ev.key === "Delete" || ev.key === "Backspace") { ev.preventDefault(); delSel(); return; }
+  const step = ev.shiftKey ? 20 : 4, mv = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[ev.key];
+  if (mv) { ev.preventDefault(); e.x += mv[0]; e.y += mv[1]; render(); save(); }
+});
+
+/* ---------- Herramientas ---------- */
+const textColor = () => BGS[slide.bg].dark ? "#ffffff" : "#0b1220";
+$$("[data-add]").forEach(b => b.addEventListener("click", () => {
+  const t = b.dataset.add; let e;
+  if (t === "title") e = { type: "text", role: "title", x: 60, y: 50, w: 600, text: "Nuevo título", size: 44, color: textColor(), bold: true, align: "left", anim: "left", loop: "" };
+  if (t === "text") e = { type: "text", x: 80, y: 220, w: 420, text: "Escribe tu idea aquí", size: 24, color: textColor(), bold: false, align: "left", anim: "fade", loop: "" };
+  if (t === "box") e = { type: "box", x: 40, y: 140, w: 520, h: 160, color: "#3fd0e0", opacity: .18, anim: "fade", loop: "" };
+  if (t === "circle") e = { type: "circle", x: 700, y: 60, w: 180, h: 180, color: "#7c8cff", opacity: .35, anim: "zoom", loop: "pulseL" };
+  e.id = nid(); e.def = e.text; slide.els.push(e); selId = e.id; render(); save();
+}));
+$("#lib").innerHTML = Object.keys(ILL).map(k => `<button type="button" data-ill="${k}" title="${ILL[k].n}" aria-label="Agregar ${ILL[k].n}">${illUnique(k)}</button>`).join("");
+$$("#lib button").forEach(b => b.addEventListener("click", () => {
+  const e = byId(selId);
+  if (e && e.type === "img") { e.img = b.dataset.ill; }
+  else { const n = { id: nid(), type: "img", img: b.dataset.ill, x: 600 + Math.random() * 60, y: 140 + Math.random() * 60, w: 220, h: 220, anim: "zoom", loop: "" }; slide.els.push(n); selId = n.id; }
+  render(); save(); toast(ILL[b.dataset.ill].n + (e && e.type === "img" ? " reemplazada" : " agregada"));
+}));
+function renderBgs() {
+  $("#bgs").innerHTML = Object.keys(BGS).map(k => `<button type="button" data-bg="${k}" title="${BGS[k].n}" aria-label="Fondo ${BGS[k].n}" class="${slide.bg === k ? "on" : ""}" style='background-image:${bgURL(k)}'></button>`).join("");
+  $$("#bgs button").forEach(b => b.addEventListener("click", () => {
+    const wasDark = BGS[slide.bg].dark; slide.bg = b.dataset.bg;
+    if (wasDark !== BGS[slide.bg].dark) slide.els.forEach(e => { if (e.type === "text" && (e.color === "#ffffff" || e.color === "#0b1220" || e.color === "#e8eefb" || e.color === "#1b2a44")) e.color = BGS[slide.bg].dark ? "#ffffff" : "#0b1220"; });
+    renderBgs(); render(); save();
+  }));
+}
+renderBgs();
+$("#resetSlide").addEventListener("click", () => {
+  const b = $("#resetSlide");
+  if (b.dataset.sure) { slide = starter(); selId = null; render(); renderBgs(); save(); b.textContent = "Empezar de nuevo"; delete b.dataset.sure; toast("Diapositiva reiniciada"); }
+  else { b.dataset.sure = 1; b.textContent = "¿Seguro? Toca otra vez"; setTimeout(() => { delete b.dataset.sure; b.textContent = "Empezar de nuevo"; }, 3000); }
+});
+
+/* ---------- Panel de propiedades ---------- */
+$("#pColor").innerHTML = COLORS.map(c => `<button type="button" data-c="${c}" style="background:${c}" aria-label="Color ${c}"></button>`).join("");
+function renderProps() {
+  const e = byId(selId);
+  $("#propsEmpty").hidden = !!e; $("#propsBody").hidden = !e;
+  if (!e) return;
+  const isText = e.type === "text", isShape = e.type === "box" || e.type === "circle";
+  $("#pTextF").hidden = !isText; $("#pSizeF").hidden = !isText; $("#pFmtF").hidden = !isText; $("#pColorF").hidden = e.type === "img";
+  if (isText) { $("#pText").value = e.text; $("#pSize").value = e.size; $("#pSizeV").textContent = e.size + " px"; $("#pBold").classList.toggle("on", e.bold); $$("[data-align]").forEach(b => b.classList.toggle("on", b.dataset.align === e.align)); }
+  $$("#pColor button").forEach(b => b.classList.toggle("on", b.dataset.c === e.color));
+  $("#pAnim").value = e.anim || ""; $("#pLoop").value = e.loop || "";
+}
+const upd = (fn) => { const e = byId(selId); if (!e) return; fn(e); render(); save(); };
+$("#pText").addEventListener("input", ev => { const e = byId(selId); if (!e) return; e.text = ev.target.value; const n = $(`.el[data-id="${e.id}"] .inner`, stage); if (n) n.textContent = e.text; save(); });
+$("#pSize").addEventListener("input", ev => upd(e => e.size = +ev.target.value));
+$("#pColor").addEventListener("click", ev => { const b = ev.target.closest("button"); if (b) upd(e => e.color = b.dataset.c); });
+$("#pBold").addEventListener("click", () => upd(e => e.bold = !e.bold));
+$$("[data-align]").forEach(b => b.addEventListener("click", () => upd(e => e.align = b.dataset.align)));
+$("#pAnim").addEventListener("change", ev => { upd(e => e.anim = ev.target.value); previewSel(); });
+$("#pLoop").addEventListener("change", ev => upd(e => e.loop = ev.target.value));
+$("#pFront").addEventListener("click", () => upd(e => { slide.els = slide.els.filter(x => x !== e); slide.els.push(e); }));
+$("#pBack").addEventListener("click", () => upd(e => { slide.els = slide.els.filter(x => x !== e); slide.els.unshift(e); }));
+$("#pDup").addEventListener("click", () => upd(e => { const c = { ...e, id: nid(), x: e.x + 24, y: e.y + 24 }; slide.els.push(c); selId = c.id; }));
+function delSel() { slide.els = slide.els.filter(x => x.id !== selId); selId = null; render(); save(); toast("Elemento eliminado"); }
+$("#pDel").addEventListener("click", delSel);
+function previewSel() {
+  const e = byId(selId); if (!e || !e.anim) return;
+  const n = $(`.el[data-id="${e.id}"]`, stage); n.style.animation = "none"; void n.offsetWidth;
+  n.style.animation = `a-${e.anim} .8s cubic-bezier(.2,.8,.2,1) both`;
+}
+$("#pPreview").addEventListener("click", previewSel);
+
+/* ---------- Requisitos ---------- */
+const words = t => (t || "").trim().split(/\s+/).filter(Boolean).length;
+function checks() {
+  const texts = slide.els.filter(e => e.type === "text");
+  const title = texts.find(e => e.role === "title" && e.text.trim() !== e.def && e.text.trim().length >= 4);
+  const body = texts.filter(e => e.role !== "title" && e.text.trim() !== e.def && words(e.text) >= 5);
+  const total = texts.filter(e => e.text.trim() !== e.def).reduce((n, e) => n + words(e.text), 0);
+  const all = texts.map(e => e.text).join(" ");
+  return [
+    ["Un título escrito por ti", !!title],
+    ["Al menos 2 textos con información (5 palabras o más cada uno)", body.length >= 2],
+    [`Mínimo 30 palabras en total (llevas ${total})`, total >= 30],
+    ["Menciona una aplicación: medicina, electrónica, materiales, ambiente, ropa o cosméticos", /medicin|salud|c[eé]lula|electr[oó]nic|chip|celular|material|grafeno|nanotubo|agua|ambient|ropa|tela|textil|cosm[eé]tic|protector|energ/i.test(all)],
+    ["Al menos 2 ilustraciones", slide.els.filter(e => e.type === "img").length >= 2],
+    ["Al menos 1 animación o movimiento", slide.els.some(e => e.anim || e.loop)]
+  ];
+}
+function updateChecks() {
+  const html = checks().map(([t, ok]) => `<li class="${ok ? "ok" : ""}"><span class="dot"></span><span>${esc(t)}</span></li>`).join("");
+  $("#slideChecks").innerHTML = html; $("#finalChecks").innerHTML = html;
+}
+
+/* ---------- Presentar ---------- */
+function present() {
+  const p = $("#present"), ps = $("#presentStage");
+  p.classList.add("on");
+  try { p.requestFullscreen?.().catch(() => { }); } catch (e) { }
+  const sizeIt = () => { const s = Math.min(innerWidth / 960, innerHeight / 540); ps.style.transform = `scale(${s})`; ps.style.width = "960px"; ps.style.height = "540px"; ps.style.margin = `${(innerHeight - 540 * s) / 2}px 0 0 ${(innerWidth - 960 * s) / 2}px`; ps.style.transformOrigin = "0 0"; ps.style.position = "fixed"; ps.style.left = "0"; ps.style.top = "0"; };
+  sizeIt(); addEventListener("resize", sizeIt); present._r = sizeIt;
+  renderInto(ps, "show", true);
+}
+function exitPresent() { $("#present").classList.remove("on"); removeEventListener("resize", present._r); try { if (document.fullscreenElement) document.exitFullscreen(); } catch (e) { } }
+$("#presentBtn").addEventListener("click", present);
+$("#replay").addEventListener("click", () => renderInto($("#presentStage"), "show", true));
+$("#exitPresent").addEventListener("click", exitPresent);
+document.addEventListener("keydown", ev => { if (ev.key === "Escape" && $("#present").classList.contains("on")) exitPresent(); });
+
+/* ---------- Exportar diapositiva a lienzo ---------- */
+async function drawSlide(ctx, x, y, w, h) {
+  const s = w / 960;
+  ctx.drawImage(await svgToImage(BGS[slide.bg].s), x, y, w, h);
+  for (const e of slide.els) {
+    const ex = x + e.x * s, ey = y + e.y * s;
+    if (e.type === "img") { ctx.drawImage(await svgToImage(ILL[e.img].s.replace(/<svg /, `<svg width="${e.w * 2}" height="${e.h * 2}" `)), ex, ey, e.w * s, e.h * s); }
+    else if (e.type === "box" || e.type === "circle") {
+      ctx.save(); ctx.globalAlpha = e.opacity ?? .9; ctx.fillStyle = e.color;
+      if (e.type === "circle") { ctx.beginPath(); ctx.ellipse(ex + e.w * s / 2, ey + e.h * s / 2, e.w * s / 2, e.h * s / 2, 0, 0, 7); ctx.fill(); }
+      else { roundRect(ctx, ex, ey, e.w * s, e.h * s, 18 * s); ctx.fill(); }
+      ctx.restore();
+    } else {
+      const fs = e.size * s;
+      ctx.font = `${e.bold ? 700 : 500} ${fs}px ${e.role === "title" ? "'Chakra Petch'" : "Nunito"}, sans-serif`;
+      ctx.fillStyle = e.color; ctx.textBaseline = "top"; ctx.textAlign = e.align;
+      const ax = e.align === "center" ? ex + e.w * s / 2 : e.align === "right" ? ex + e.w * s : ex;
+      wrapLines(ctx, e.text, e.w * s).forEach((l, i) => ctx.fillText(l, ax, ey + i * fs * 1.2 + fs * .1));
+      ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+    }
+  }
+}
+
+/* ---------- Entrega ---------- */
+App.onEnter[2] = () => { render(); updateChecks(); };
+App.onEnter[3] = () => { renderInto($("#finalStage"), "show", true); $("#finalStage").parentElement.classList.add("final"); fit($("#finalShell"), $("#finalStage")); updateChecks(); };
+$("#refl").value = Store.get("refl", "");
+$("#refl").addEventListener("input", e => Store.set("refl", e.target.value));
+$("#makeEv").addEventListener("click", async () => {
+  const r = $("#refl"), fld = r.closest(".field");
+  if (words(r.value) < 8) { fld.classList.add("err"); fld.querySelector(".msg").textContent = "Escribe al menos 8 palabras."; r.focus(); return; }
+  fld.classList.remove("err"); fld.querySelector(".msg").textContent = "";
+  const b = $("#makeEv"); b.disabled = true; b.textContent = "Generando…";
+  try {
+    await document.fonts.ready;
+    const ch = checks(), ok = ch.filter(c => c[1]).length;
+    const title = (slide.els.find(e => e.role === "title") || {}).text || "(sin título)";
+    const quiz = quizScore == null ? "No respondido" : `${quizScore} de 5 correctas`;
+    const url = await buildEvidence({
+      periodo: "Primer periodo", actividad: "Mi diapositiva sobre Nanotecnología", accent: ACCENT, workH: 666, drawWork: drawSlide,
+      resumen: [["Título", title], ["Requisitos cumplidos", `${ok} de ${ch.length}`], ["Mini quiz", quiz], ["Reflexión", r.value.trim()]]
+    });
+    const s = App.student;
+    const txt = `PRIMER PERIODO · Diapositiva Nanotecnología\nEstudiante: ${s.nombres} ${s.apellidos}\nGrado: ${s.grado} · Grupo: ${s.grupo}\nFecha: ${fmtFecha()}\nTítulo: ${title}\nRequisitos cumplidos: ${ok} de ${ch.length}\nMini quiz: ${quiz}\nTextos de la diapositiva:\n${slide.els.filter(e => e.type === "text").map(e => "- " + e.text).join("\n")}\nReflexión: ${r.value.trim()}`;
+    App.markDone(3);
+    showEvidence(url, txt, "P1_Nanotecnologia_" + slug(s.apellidos + "_" + s.nombres));
+  } catch (err) { console.error(err); toast("No se pudo generar la imagen. Intenta de nuevo."); }
+  b.disabled = false; b.textContent = "Generar mi evidencia";
+});
+
+App.init();
+setupRegistration();
+updateChecks();
+
+</script>
+</body>
+</html>
